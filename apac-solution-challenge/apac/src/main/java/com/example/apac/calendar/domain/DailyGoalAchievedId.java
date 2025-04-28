@@ -6,14 +6,14 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 @Embeddable
-public class DailyGoalRecordId implements Serializable {
+public class DailyGoalAchievedId implements Serializable {
     private Long userId;
     private LocalDate date;
 
-    protected DailyGoalRecordId() {
+    protected DailyGoalAchievedId() {
     }
 
-    protected DailyGoalRecordId(Long userId, LocalDate date) {
+    protected DailyGoalAchievedId(Long userId, LocalDate date) {
         this.userId = this.userId;
         this.date = date;
     }

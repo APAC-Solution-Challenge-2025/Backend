@@ -7,19 +7,19 @@ import jakarta.persistence.Entity;
 import java.time.LocalDate;
 
 @Entity
-public class DailyGoalRecord {
+public class DailyGoalAchieved {
 
     @EmbeddedId
-    private DailyGoalRecordId dailyGoalRecordId;
+    private DailyGoalAchievedId dailyGoalAchievedId;
 
     @Column(nullable = false)
     private int goalAchievedCount = 0;
 
-    protected DailyGoalRecord() {
+    protected DailyGoalAchieved() {
     }
 
-    protected DailyGoalRecord(Long userId, LocalDate date, int goalAchievedCount) {
-        this.dailyGoalRecordId = new DailyGoalRecordId(userId, date);
+    protected DailyGoalAchieved(Long userId, LocalDate date, int goalAchievedCount) {
+        this.dailyGoalAchievedId = new DailyGoalAchievedId(userId, date);
         this.goalAchievedCount = goalAchievedCount;
     }
 }

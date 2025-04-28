@@ -1,9 +1,9 @@
 package com.example.apac.calendar.service;
 
-import com.example.apac.calendar.domain.DailyGoalRecord;
+import com.example.apac.calendar.domain.DailyGoalAchieved;
 import com.example.apac.calendar.dto.CalendarDay;
 import com.example.apac.calendar.dto.CalendarResponse;
-import com.example.apac.calendar.repository.DailyGoalRecordRepository;
+import com.example.apac.calendar.repository.DailyGoalAchievedRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,18 +13,18 @@ import java.util.stream.Collectors;
 
 @Service
 public class CalendarService {
-    private final DailyGoalRecordRepository dailyGoalRecordRepository;
+    private final DailyGoalAchievedRepository dailyGoalAchievedRepository;
 
     @Autowired
-    public CalendarService(DailyGoalRecordRepository dailyGoalRecordRepository) {
-        this.dailyGoalRecordRepository = dailyGoalRecordRepository;
+    public CalendarService(DailyGoalAchievedRepository dailyGoalAchievedRepository) {
+        this.dailyGoalAchievedRepository = dailyGoalAchievedRepository;
     }
 
     public CalendarResponse getCalendar(Long userId, int year, int month) {
         LocalDate startDate = LocalDate.of(year, month, 1);
         LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
 
-        List<DailyGoalRecord> records = dailyGoalRecordRepository.findByUserId_IdAndDateBetween(userId, startDate, endDate);
+        List<DailyGoalAchieved> records = dailyGoalAchievedRepository.findByUserId_IdAndDateBetween(userId, startDate, endDate);
 
         List<CalendarDay> days = records.stream()
                 .map(record -> new CalendarDay(record.getId().getDate().toString(), record.getGoalAchievedCount()))
