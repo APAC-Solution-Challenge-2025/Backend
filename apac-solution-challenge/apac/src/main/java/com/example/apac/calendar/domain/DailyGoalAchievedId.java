@@ -17,4 +17,8 @@ public class DailyGoalAchievedId implements Serializable {
         this.userId = this.userId;
         this.date = date;
     }
+
+    public LocalDate getDate() {
+        return date;
+    }
 }

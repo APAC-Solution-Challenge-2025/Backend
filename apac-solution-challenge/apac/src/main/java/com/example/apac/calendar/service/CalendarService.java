@@ -24,7 +24,7 @@ public class CalendarService {
         LocalDate startDate = LocalDate.of(year, month, 1);
         LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
 
-        List<DailyGoalAchieved> records = dailyGoalAchievedRepository.findByUserId_IdAndDateBetween(userId, startDate, endDate);
+        List<DailyGoalAchieved> records = dailyGoalAchievedRepository.findById_UserIdAndId_DateBetween(userId, startDate, endDate);
 
         List<CalendarDay> days = records.stream()
                 .map(record -> new CalendarDay(record.getId().getDate().toString(), record.getGoalAchievedCount()))
