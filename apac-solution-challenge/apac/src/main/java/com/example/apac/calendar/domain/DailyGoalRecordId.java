@@ -7,14 +7,14 @@ import java.time.LocalDate;
 
 @Embeddable
 public class DailyGoalRecordId implements Serializable {
-    private Long id;
+    private Long userId;
     private LocalDate date;
 
     protected DailyGoalRecordId() {
     }
 
     protected DailyGoalRecordId(Long userId, LocalDate date) {
-        this.id = id;
+        this.userId = this.userId;
         this.date = date;
     }
 }

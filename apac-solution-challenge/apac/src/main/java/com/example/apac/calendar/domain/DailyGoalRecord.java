@@ -18,8 +18,8 @@ public class DailyGoalRecord {
     protected DailyGoalRecord() {
     }
 
-    protected DailyGoalRecord(Long id, LocalDate date, int goalAchievedCount) {
-        this.dailyGoalRecordId = new DailyGoalRecordId(id, date);
+    protected DailyGoalRecord(Long userId, LocalDate date, int goalAchievedCount) {
+        this.dailyGoalRecordId = new DailyGoalRecordId(userId, date);
         this.goalAchievedCount = goalAchievedCount;
     }
 }
