@@ -61,6 +61,6 @@ public class AuthController {
         result.put("email", email);
         result.put("name", name);
 
-        return ResponseEntity.ok(result);
+            return ResponseEntity.ok(result);
     }
 }
