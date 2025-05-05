@@ -4,10 +4,14 @@ import com.example.apac.calendar.dto.CalendarResponse;
 import com.example.apac.calendar.service.CalendarService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
+
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 
 @RestController
 @RequestMapping("/api/calendar")
@@ -34,8 +38,11 @@ public class CalendarController {
         }
 
         try {
-            Claims claims = Jwts.parser()
-                    .setSigningKey(secretKey)
+            SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
                     .parseClaimsJws(token)
                     .getBody();
 
