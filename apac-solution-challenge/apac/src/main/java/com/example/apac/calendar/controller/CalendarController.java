@@ -5,6 +5,7 @@ import com.example.apac.calendar.service.CalendarService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,10 +13,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/calendar")
 public class CalendarController {
     private final CalendarService calendarService;
+    private final String secretKey;
 
     @Autowired
-    public CalendarController(CalendarService calendarService) {
+    public CalendarController(CalendarService calendarService, @Value("${jwt.secret.key}") String secretKey) {
         this.calendarService = calendarService;
+        this.secretKey = secretKey;
     }
 
     @GetMapping
@@ -32,7 +35,7 @@ public class CalendarController {
 
         try {
             Claims claims = Jwts.parser()
-                    .setSigningKey("your-secret-key")
+                    .setSigningKey(secretKey)
                     .parseClaimsJws(token)
                     .getBody();
 
