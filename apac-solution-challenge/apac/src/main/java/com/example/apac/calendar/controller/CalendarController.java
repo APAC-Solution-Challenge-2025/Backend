@@ -25,10 +25,10 @@ public class CalendarController {
     public CalendarResponse getCalendar(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestParam int year, @RequestParam int month) {
         Long userId = extractUserIdFromJwt(token);
 
-        return calendarService.getCalendar(userId, year, month);
+        return calendarService.getCalendar(email, year, month);
     }
 
-    private Long extractUserIdFromJwt(String token) {
+    private String extractEmailFromJwt(String token) {
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7);
         }
@@ -39,7 +39,7 @@ public class CalendarController {
                     .parseClaimsJws(token)
                     .getBody();
 
-            return Long.parseLong(claims.get("userId", String.class));
+            return claims.getSubject();
         } catch (Exception e) {
             throw new RuntimeException("Invalid or expired JWT token", e);
         }
