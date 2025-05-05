@@ -23,7 +23,7 @@ public class CalendarController {
 
     @GetMapping
     public CalendarResponse getCalendar(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestParam int year, @RequestParam int month) {
-        Long userId = extractUserIdFromJwt(token);
+        String email = extractEmailFromJwt(token);
 
         return calendarService.getCalendar(email, year, month);
     }
