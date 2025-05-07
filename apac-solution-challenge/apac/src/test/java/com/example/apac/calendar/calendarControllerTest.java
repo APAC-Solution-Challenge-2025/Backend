@@ -44,11 +44,11 @@ public class calendarControllerTest {
 
     @Test
     @DisplayName("정상적인 JWT로 캘린더를 조회하면 캘린더 응답을 반환한다")
-    void getCalendar_returnExpextedResponse() throws Exception{
+    void getCalendar_returnExpextedResponse() throws Exception {
         //given
-        String email="test@google.com";
-        int year=2025;
-        int month=5;
+        String email = "test@google.com";
+        int year = 2025;
+        int month = 5;
 
 
         //when
@@ -58,7 +58,7 @@ public class calendarControllerTest {
                 .signWith(key)
                 .compact();
 
-        CalendarResponse responseForTest= new CalendarResponse(
+        CalendarResponse responseForTest = new CalendarResponse(
                 year, month,
                 List.of(
                         new CalendarDay("2025-05-01", 3),
@@ -71,14 +71,28 @@ public class calendarControllerTest {
 
         //when&then
         mockMvc.perform(get("/api/calendar")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer "+jwtToken)
-                .param("year", "2025")
-                .param("month", "5"))
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
+                        .param("year", "2025")
+                        .param("month", "5"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.year").value(2025))
                 .andExpect(jsonPath("$.month").value(5))
                 .andExpect(jsonPath("$.days[0].goalAchievedCount").value(3))
                 .andExpect(jsonPath("$.days[1].goalAchievedCount").value(2));
+    }
+
+    @Test
+    @DisplayName("잘못된 JWT로 요청 시 400 상태 코드를 반환한다")
+    void getCalendar_withInvalidJwt_returnsBadRequest() throws Exception {
+        //given
+        String invalidToken = "Bearer invalid.jwt.token";
+
+        //when&then
+        mockMvc.perform(get("/api/calendar")
+                        .header(HttpHeaders.AUTHORIZATION, invalidToken)
+                        .param("year", "2025")
+                        .param("month", "5"))
+                .andExpect(status().isBadRequest());
     }
 
 }
