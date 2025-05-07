@@ -8,7 +8,9 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
@@ -48,7 +50,7 @@ public class CalendarController {
 
             return claims.getSubject();
         } catch (Exception e) {
-            throw new RuntimeException("Invalid or expired JWT token", e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid or expired JWT token");
         }
     }
 }
