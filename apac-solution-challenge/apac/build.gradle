@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.4.4'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id 'org.asciidoctor.jvm.convert' version '3.3.2'
 }
 
 group = 'com.example'
@@ -17,6 +18,7 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
+	asciidoctorExt
 }
 
 repositories {
@@ -33,7 +35,8 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
 	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
-
+	asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -41,6 +44,44 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+ext {
+	set('snippetsDir', file('build/generated-snippets'))
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
+	outputs.dir snippetsDir
+	finalizedBy tasks.named('asciidoctor')
+}
+
+tasks.named('asciidoctor') {
+	dependsOn tasks.named('test')
+	configurations 'asciidoctorExt'
+	inputs.dir snippetsDir
+	finalizedBy tasks.named('copyDocument')
+	doFirst {
+		delete file('src/main/resources/static/docs')
+	}
+}
+
+tasks.named('testClasses') {
+	doFirst {
+		delete file('build/docs/asciidoc')
+	}
+}
+
+tasks.register('copyDocument', Copy) {
+	dependsOn tasks.named('asciidoctor')
+	from file('build/docs/asciidoc')
+	into file('src/main/resources/static/docs')
+}
+
+bootJar {
+	dependsOn tasks.named('asciidoctor')
+	doFirst {
+		delete file('src/main/resources/static/docs')
+	}
+	from("${asciidoctor.outputDir}") {
+		into 'static/docs'
+	}
 }
