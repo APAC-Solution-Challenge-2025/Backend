@@ -7,7 +7,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -24,34 +26,30 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = request.getHeader("Authorization");
+        String token = resolveToken(request);
 
-        if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7);
-
+        if (token != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             try {
                 String email = jwtUtil.getEmailFromToken(token);
+                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(email, null, null);
+                auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(email, null, new ArrayList<>());
                 SecurityContextHolder.getContext().setAuthentication(auth);
-            } catch (ExpiredJwtException e) {
-                handleExpiredToken(response);
-                return;
+            } catch (Exception e) {
+                System.out.println("JWT 검증 실패: " + e.getMessage());
             }
         }
 
         filterChain.doFilter(request, response);
     }
 
-    private void handleExpiredToken(HttpServletResponse response) throws IOException {
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expired");
-    }
+    private String resolveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
 
-    // 로그인/토큰 재발급 경로는 필터 건너뜀
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
-        String path = request.getRequestURI();
-        return path.startsWith("/login/") ||
-                path.startsWith("/refresh-token");
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+
+        return null;
     }
 }
