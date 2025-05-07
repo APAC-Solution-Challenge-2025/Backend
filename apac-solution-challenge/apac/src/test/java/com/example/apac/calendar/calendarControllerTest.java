@@ -44,7 +44,7 @@ public class calendarControllerTest {
 
     @Test
     @DisplayName("정상적인 JWT로 캘린더를 조회하면 캘린더 응답을 반환한다")
-    void getCalendar_returnExpextedResponse() throws Exception {
+    void getCalendar_returnExpectedResponse() throws Exception {
         //given
         String email = "test@google.com";
         int year = 2025;
