@@ -1,5 +1,6 @@
 # JWT signature secret key
 src/main/resources/application-secret.properties
+src/main/resources/firebase-service-account.json
 
 HELP.md
 .gradle
