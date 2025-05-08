@@ -1,10 +1,8 @@
 package com.example.apac.service;
 
 import com.example.apac.domain.User;
-import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
-import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
