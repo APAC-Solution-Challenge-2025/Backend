@@ -1,54 +1,28 @@
 package com.example.apac.calendar.controller;
 
-import com.example.apac.calendar.dto.CalendarResponse;
+import com.example.apac.calendar.dto.CalendarResponseDTO;
 import com.example.apac.calendar.service.CalendarService;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.web.bind.annotation.*;
-
-import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/calendar")
 public class CalendarController {
     private final CalendarService calendarService;
-    private final String secretKey;
 
     @Autowired
-    public CalendarController(CalendarService calendarService, @Value("${jwt.secret.key}") String secretKey) {
+    public CalendarController(CalendarService calendarService) {
         this.calendarService = calendarService;
-        this.secretKey = secretKey;
     }
 
     @GetMapping
-    public CalendarResponse getCalendar(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestParam int year, @RequestParam int month) {
-        String email = extractEmailFromJwt(token);
+    public CalendarResponseDTO getCalendar(Authentication authentication, @RequestParam int year, @RequestParam int month) {
+        String email = authentication.getName();
 
         return calendarService.getCalendar(email, year, month);
-    }
-
-    private String extractEmailFromJwt(String token) {
-        if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7);
-        }
-
-        try {
-            SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
-
-            Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-
-            return claims.getSubject();
-        } catch (Exception e) {
-            throw new RuntimeException("Invalid or expired JWT token", e);
-        }
     }
 }
