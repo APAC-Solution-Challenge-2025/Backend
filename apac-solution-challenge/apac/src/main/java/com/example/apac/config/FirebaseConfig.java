@@ -20,7 +20,7 @@ public class FirebaseConfig {
 
         FirebaseOptions options = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                .setProjectId("haru-30c5e")
+                .setProjectId("apac-53c41")
                 .build();
 
         if (FirebaseApp.getApps().isEmpty()) {
