@@ -1,5 +1,13 @@
 package com.example.apac.calendar.dto;
 
-public record CalendarDayDTO(String date, int goalAchievedCount) {
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class CalendarDayDTO {
+    private String date;
+    private int goalAchievedCount;
 }

@@ -1,9 +1,7 @@
 package com.example.apac.security;
 
-import com.example.apac.domain.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import javax.crypto.SecretKey;
 import io.jsonwebtoken.security.Keys;
