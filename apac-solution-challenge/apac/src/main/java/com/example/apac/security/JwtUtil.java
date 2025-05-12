@@ -5,11 +5,13 @@ import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
 import javax.crypto.SecretKey;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
+@PropertySource("classpath:application-secret.properties")
 @Component
 public class JwtUtil {
 

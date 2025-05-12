@@ -14,3 +14,4 @@ public class CalendarResponseDTO {
     private int month;
     private List<CalendarDayDTO> days;
 }
+
