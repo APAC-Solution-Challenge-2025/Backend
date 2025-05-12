@@ -13,43 +13,17 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
-@Component
+
 public class JwtFilter extends OncePerRequestFilter {
 
-    private final JwtUtil jwtUtil;
-
-    public JwtFilter(JwtUtil jwtUtil) {
-        this.jwtUtil = jwtUtil;
-    }
-
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = resolveToken(request);
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain)
+            throws ServletException, IOException {
 
-        if (token != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            try {
-                String email = jwtUtil.getEmailFromToken(token);
-                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(email, null, null);
-                auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-                SecurityContextHolder.getContext().setAuthentication(auth);
-            } catch (Exception e) {
-                System.out.println("JWT 검증 실패: " + e.getMessage());
-            }
-        }
-
+        System.out.println("!! JwtFilter 통과: " + request.getRequestURI());
         filterChain.doFilter(request, response);
-    }
-
-    private String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
-        }
-
-        return null;
     }
 }

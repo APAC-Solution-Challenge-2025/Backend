@@ -13,29 +13,53 @@ java {
 	}
 }
 
+repositories {
+	mavenCentral()
+	maven { url 'https://repo.spring.io/milestone' }
+	maven { url 'https://repo.spring.io/snapshot' }
+}
+
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
+	all {
+		exclude group: 'org.springframework.cloud', module: 'spring-cloud-function-context'
 	}
 }
 
-repositories {
-	mavenCentral()
-}
-
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	implementation platform('org.springframework.ai:spring-ai-bom:0.8.1')
+
+	// Vertex AI (Gemini) Spring AI Starter
+	implementation 'org.springframework.ai:spring-ai-vertex-ai-gemini-spring-boot-starter:0.8.1'
+
+	// Spring 기본 웹/보안
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	// JSON 처리
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
+
+	// Swagger
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
-	implementation 'org.apache.commons:commons-lang3:3.12.0'
-	implementation 'com.google.firebase:firebase-admin:9.2.0'
+
+	// JWT 라이브러리
 	implementation 'io.jsonwebtoken:jjwt-api:0.12.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.5'
+
+	// Firebase
+	implementation 'com.google.firebase:firebase-admin:9.2.0'
+
+	// 검증 라이브러리
+	implementation 'org.hibernate.validator:hibernate-validator:8.0.1.Final'
+
+	// build.gradle
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	// 롬복
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+
+	// 테스트
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
@@ -43,4 +67,8 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+tasks.named('processResources') {
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }

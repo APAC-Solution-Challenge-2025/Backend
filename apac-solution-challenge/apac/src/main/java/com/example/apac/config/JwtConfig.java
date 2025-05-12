@@ -16,6 +16,6 @@ public class JwtConfig {
 
     @Bean
     public JwtFilter jwtFilter() {
-        return new JwtFilter(jwtUtil);
+        return new JwtFilter();
     }
 }
