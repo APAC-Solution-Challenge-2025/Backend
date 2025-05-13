@@ -1,7 +1,6 @@
 package com.example.apac.controller;
 
 import com.example.apac.service.UserService;
-import com.example.apac.domain.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.core.Authentication;
