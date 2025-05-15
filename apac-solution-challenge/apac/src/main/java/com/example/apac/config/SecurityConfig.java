@@ -33,9 +33,9 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/api/chat",
-                                "/api/check-key",
                                 "/api/auth/**",
-                                "/api/call-gemini"
+                                "/api/health-data",
+                                "/api/health-data/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
