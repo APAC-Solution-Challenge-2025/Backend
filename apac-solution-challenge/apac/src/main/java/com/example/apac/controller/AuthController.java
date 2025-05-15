@@ -21,7 +21,7 @@ import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("/api/auth")
-@Tag(name = "Auth", description = "사용자 인증 관련 API")
+@Tag(name = "AuthController", description = "사용자 인증 관련 API")
 public class AuthController {
 
     private final JwtUtil jwtUtil;
