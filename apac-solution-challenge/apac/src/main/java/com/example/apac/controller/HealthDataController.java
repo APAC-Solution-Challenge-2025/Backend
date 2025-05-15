@@ -1,36 +1,35 @@
-package com.example.apac.controller.data;
+package com.example.apac.controller;
 
-import com.example.apac.dto.data.HealthStatusDto;
-import com.example.apac.service.HealthStatusService;
+import com.example.apac.dto.HealthDataDto;
+import com.example.apac.service.HealthDataService;
 import com.google.firebase.auth.FirebaseToken;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import com.google.firebase.auth.FirebaseAuth;
 
 @RestController
-@RequestMapping("/api/data")
-@Tag(name = "HealthStatusController", description = "회원가입 시 사용자 정보 관련 API - 보호자 / 출산직후 여성")
-public class HealthStatusController {
+@RequestMapping("/api")
+@Tag(name = "HealthDataController", description = "회원가입 시 사용자 정보 관련 API")
+public class HealthDataController {
 
-    private final HealthStatusService healthStatusService;
+    private final HealthDataService healthDataService;
 
-    @Autowired
-    public HealthStatusController(HealthStatusService healthStatusService) {
-        this.healthStatusService = healthStatusService;
+//    @Autowired
+    public HealthDataController(HealthDataService healthDataService) {
+        this.healthDataService = healthDataService;
     }
 
-    @Operation(summary = "사용자 정보(보호자 / 출산직후 여성) DB 저장")
-    @PostMapping("/health-status")
-    public ResponseEntity<String> saveHealthData(@RequestBody HealthStatusDto request,
-                                                 @RequestHeader("Authorization") String idToken) {
+    @Operation(summary = "회원가입 시 입력된 사용자 정보를 DB에 저장")
+    @PostMapping("/health-data")
+    public ResponseEntity<String> saveHealthData(@RequestBody HealthDataDto request,
+                                                 @RequestParam("email") String email) {
         try {
-            FirebaseToken firebaseToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
-            String userId = firebaseToken.getUid();
-
-            healthStatusService.saveHealthDataFromDto(userId, request);
+            healthDataService.saveHealthDataFromDto(email, request);
 
             return ResponseEntity.ok("health status 데이터 저장 성공");
         } catch (Exception e) {
@@ -38,3 +37,4 @@ public class HealthStatusController {
         }
     }
 }
+
