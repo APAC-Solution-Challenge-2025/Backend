@@ -11,7 +11,7 @@ import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("/api/user")
-@Tag(name = "User", description = "사용자 정보 관련 API")
+@Tag(name = "UserController", description = "사용자 정보 관련 API")
 public class UserController {
 
     private final UserService userService;
