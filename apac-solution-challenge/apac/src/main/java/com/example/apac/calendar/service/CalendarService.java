@@ -78,4 +78,16 @@ public class CalendarService {
         return new CalendarResponseDTO(year, month, days);
     }
 
+    public DailyGoalAchieved saveDailyGoal(DailyGoalAchieved dailyGoalAchieved) throws ExecutionException, InterruptedException {
+        Firestore db = FirestoreClient.getFirestore();
+        String docId = dailyGoalAchieved.getEmail() + "_" + dailyGoalAchieved.getDate();
+
+        db.collection("daily_goal_achieved")
+                .document(docId)
+                .set(dailyGoalAchieved)
+                .get();
+
+        return dailyGoalAchieved;
+    }
+
 }
