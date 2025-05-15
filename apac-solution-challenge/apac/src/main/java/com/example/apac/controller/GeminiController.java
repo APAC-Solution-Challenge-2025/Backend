@@ -86,6 +86,7 @@ public class GeminiController {
     public GeminiController(GeminiService geminiService) {
         this.geminiService = geminiService;
     }
+
     @Operation(summary = "Gemini 응답 생성 및 DB 저장", description = "사용자에게 받은 요청에 따른 Gemini 응답을 생성합니다. 그리고 Firebase에 사용자의 요청과 Gemini 응답을 저장합니다. ")
     @PostMapping("/chat")
     public String chat(@RequestBody ChatRequest request) throws Exception {
