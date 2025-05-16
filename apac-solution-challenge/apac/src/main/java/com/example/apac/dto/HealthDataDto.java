@@ -1,13 +1,9 @@
 package com.example.apac.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
-import java.util.Map;
 
 @Getter
 @Setter
@@ -26,6 +22,14 @@ public class HealthDataDto {
         private List<String> condition;
         private List<String> birthDate;
         private List<String> birthMethod;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class CalendarDayDTO {
+        private String date;
+        private int goalAchievedCount;
     }
 }
 

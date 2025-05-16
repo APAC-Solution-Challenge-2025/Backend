@@ -1,4 +1,4 @@
-package com.example.apac.calendar.dto;
+package com.example.apac.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CalendarDayDTO {
+public class DailyGoalAchieved {
+    private String email;
     private String date;
     private int goalAchievedCount;
 }

@@ -1,11 +1,11 @@
-package com.example.apac.calendar.dto;
+package com.example.apac.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class HealthStatusSummaryDTO {
+public class GoalStatusDTO {
     private String content;
-    private int status;
+    private boolean isAchieved;
 }

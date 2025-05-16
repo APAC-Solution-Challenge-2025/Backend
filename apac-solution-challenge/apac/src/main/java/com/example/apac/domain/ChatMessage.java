@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 public class ChatMessage {
     private String userId;
-    private String role;  // User인지 AI인지 구분
+    private String role;
     private String content;
     private Timestamp timestamp;
 

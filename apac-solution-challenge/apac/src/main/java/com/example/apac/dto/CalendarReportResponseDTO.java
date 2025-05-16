@@ -1,4 +1,4 @@
-package com.example.apac.calendar.dto;
+package com.example.apac.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

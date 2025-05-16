@@ -1,10 +1,9 @@
-package com.example.apac.calendar.service;
+package com.example.apac.service;
 
-import com.example.apac.calendar.domain.DailyGoalAchieved;
-import com.example.apac.calendar.dto.CalendarDayDTO;
-import com.example.apac.calendar.dto.CalendarReportResponseDTO;
-import com.example.apac.calendar.dto.CalendarResponseDTO;
-import com.example.apac.service.UserService;
+import com.example.apac.domain.DailyGoalAchieved;
+import com.example.apac.dto.CalendarReportResponseDTO;
+import com.example.apac.dto.CalendarResponseDTO;
+import com.example.apac.dto.HealthDataDto;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
@@ -72,8 +71,8 @@ public class CalendarService {
             throw new RuntimeException("Fail to fetch dailyGoalAchieved from Firestore");
         }
 
-        List<CalendarDayDTO> days = result.stream()
-                .map(docData -> new CalendarDayDTO(docData.getDate(), docData.getGoalAchievedCount()))
+        List<HealthDataDto.CalendarDayDTO> days = result.stream()
+                .map(docData -> new HealthDataDto.CalendarDayDTO(docData.getDate(), docData.getGoalAchievedCount()))
                 .collect(Collectors.toList());
 
         return new CalendarResponseDTO(year, month, days);
@@ -91,8 +90,8 @@ public class CalendarService {
         return dailyGoalAchieved;
     }
 
-//    public CalendarReportResponseDTO getCalendarReport(String email, int year, int month, int day) {
-//        String date = String.format("%04d-%02d-%02d", year, month, day);
-//
-//    }
+    public CalendarReportResponseDTO getCalendarReport(String email, int year, int month, int day) {
+        String date = String.format("%04d-%02d-%02d", year, month, day);
+
+    }
 }

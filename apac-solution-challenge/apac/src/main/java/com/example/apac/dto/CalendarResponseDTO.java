@@ -1,4 +1,4 @@
-package com.example.apac.calendar.dto;
+package com.example.apac.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,6 +12,6 @@ import java.util.List;
 public class CalendarResponseDTO {
     private int year;
     private int month;
-    private List<CalendarDayDTO> days;
+    private List<HealthDataDto.CalendarDayDTO> days;
 }
 
