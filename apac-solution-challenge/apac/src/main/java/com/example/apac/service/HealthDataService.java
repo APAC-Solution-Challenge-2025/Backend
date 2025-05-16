@@ -30,7 +30,12 @@ public class HealthDataService {
     }
 
     public void saveHealthDataFromDto(String email, HealthDataDto request) throws Exception {
-        Map<String, List<String>> selectedHealth = request.getHealthStatus();
-        saveHealthStatus(email, selectedHealth);
+        Map<String, Object> healthStatus = new HashMap<>();
+        healthStatus.put("email", email);
+        healthStatus.put("selectedHealth", request.getHealthStatus());
+
+        firestore.collection("users")
+                .document(email)
+                .set(healthStatus);
     }
 }

@@ -3,25 +3,14 @@ package com.example.apac.controller;
 import com.example.apac.domain.User;
 import com.example.apac.security.JwtUtil;
 import com.example.apac.service.UserService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/auth")
-@Tag(name = "AuthController", description = "사용자 인증 관련 API")
 public class AuthController {
 
     private final JwtUtil jwtUtil;
@@ -32,50 +21,64 @@ public class AuthController {
         this.userService = userService;
     }
 
-    @Operation(summary = "Google OAuth 로그인", description = "Access Token으로 사용자 인증 후, 로그인 및 회원가입을 처리하고 JWT를 발급합니다. ")
     @PostMapping("/google")
-    public ResponseEntity<?> authenticateGoogle(@RequestBody Map<String, String> body) throws ExecutionException, InterruptedException {
+    public ResponseEntity<?> authenticateGoogle(@RequestBody Map<String, String> body) {
         String accessToken = body.get("accessToken");
 
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(accessToken);
-        headers.set("User-Agent", "SpringBoot-App");
-        HttpEntity<String> entity = new HttpEntity<>(headers);
+        if (accessToken == null || accessToken.isEmpty()) {
+            return ResponseEntity.badRequest().body("!! accessToken 없음");
+        }
 
-        ResponseEntity<Map> response = restTemplate.exchange(
-                "https://www.googleapis.com/oauth2/v3/userinfo",
-                HttpMethod.GET,
-                entity,
-                Map.class
-        );
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBearerAuth(accessToken);
+            headers.set("User-Agent", "SpringBoot-App");
+            HttpEntity<String> entity = new HttpEntity<>(headers);
 
-        // 사용자 정보 받아옴
-        Map userInfo = response.getBody();
-        String email = (String) userInfo.get("email");
-        String name = (String) userInfo.get("name");
+            ResponseEntity<Map> response = restTemplate.exchange(
+                    "https://www.googleapis.com/oauth2/v3/userinfo",
+                    HttpMethod.GET,
+                    entity,
+                    Map.class
+            );
 
-        User user = userService.findByEmail(email)
-                .orElseGet(() -> {
-                    try {
-                        return userService.save(User.builder()
-                                .email(email)
-                                .name(name)
-                                .provider("google")
-                                .build());
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                });
+            Map userInfo = response.getBody();
+            if (userInfo == null) {
+                return ResponseEntity.status(500).body("!! userInfo 응답이 비어 있음");
+            }
 
-        // JWT 토큰 생성
-        String jwt = jwtUtil.generateToken(email);
+            String email = (String) userInfo.get("email");
+            String name = (String) userInfo.get("name");
 
-        Map<String, Object> result = new HashMap<>();
-        result.put("token", jwt);
-        result.put("email", email);
-        result.put("name", name);
+            if (email == null || name == null) {
+                return ResponseEntity.status(500).body("!! email, name이 없음");
+            }
 
-        return ResponseEntity.ok(result);
+            User user = userService.findByEmail(email)
+                    .orElseGet(() -> {
+                        try {
+                            return userService.save(User.builder()
+                                    .email(email)
+                                    .name(name)
+                                    .provider("google")
+                                    .build());
+                        } catch (Exception e) {
+                            throw new RuntimeException("!! 사용자 저장 실패: " + e.getMessage());
+                        }
+                    });
+
+            String jwt = jwtUtil.generateToken(email);
+
+            Map<String, Object> result = new HashMap<>();
+            result.put("token", jwt);
+            result.put("email", email);
+            result.put("name", name);
+
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("!! 서버 내부 오류: " + e.getMessage());
+        }
     }
 }

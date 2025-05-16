@@ -2,6 +2,7 @@ package com.example.apac.controller;
 
 import com.example.apac.dto.HealthDataDto;
 import com.example.apac.service.HealthDataService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.firebase.auth.FirebaseToken;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,8 +27,9 @@ public class HealthDataController {
 
     @Operation(summary = "회원가입 시 입력된 사용자 정보를 DB에 저장")
     @PostMapping("/health-data")
-    public ResponseEntity<String> saveHealthData(@RequestBody HealthDataDto request,
+    public ResponseEntity<?> saveHealthData(@RequestBody HealthDataDto request,
                                                  @RequestParam("email") String email) {
+
         try {
             healthDataService.saveHealthDataFromDto(email, request);
 
