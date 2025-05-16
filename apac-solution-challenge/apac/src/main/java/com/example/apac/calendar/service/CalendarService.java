@@ -2,6 +2,7 @@ package com.example.apac.calendar.service;
 
 import com.example.apac.calendar.domain.DailyGoalAchieved;
 import com.example.apac.calendar.dto.CalendarDayDTO;
+import com.example.apac.calendar.dto.CalendarReportResponseDTO;
 import com.example.apac.calendar.dto.CalendarResponseDTO;
 import com.example.apac.service.UserService;
 import com.google.api.core.ApiFuture;
@@ -90,4 +91,8 @@ public class CalendarService {
         return dailyGoalAchieved;
     }
 
+//    public CalendarReportResponseDTO getCalendarReport(String email, int year, int month, int day) {
+//        String date = String.format("%04d-%02d-%02d", year, month, day);
+//
+//    }
 }
